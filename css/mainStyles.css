@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    background-color: rgb(0, 0, 0);
+}
+
+h1.hero-title {
+    font-family: 'Circular Std';
+    font-weight: "Bold";
+    font-size: 128px;
+    color: white;
+    text-align: center;
+}
+
+.square {
+    height: 50px;
+    width: 50px;
+    background-color: #ffffff;
+  }
