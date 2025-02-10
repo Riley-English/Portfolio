@@ -1,27 +1,17 @@
 gsap.registerPlugin(Flip, SplitText, Draggable, InertiaPlugin)
 
-//Opening/Hero Animation
-/*
-let introTimeline = gsap.timeline();
-var splitHeroRiley = new SplitText("#heroRiley");
-var splitHeroEnglish = new SplitText("#heroEnglish");
-introTimeline.fromTo("#heroRiley",{rotation: -100, transformOrigin: "20% 100%", opacity: 0},{rotation: 0, opacity: 1, duration: 0.8, ease: "power3"});
-introTimeline.fromTo("#heroEnglish",{rotation: -100, transformOrigin: "90% 0%", opacity: 0},{rotation: 0, opacity: 1, duration: 1, ease: "power3"});
-introTimeline.to(splitHeroRiley.chars, {x: ((-200-window.innerWidth)/2)+(document.getElementById('heroRiley').offsetWidth/2), yPercent: -125, stagger: -0.05, duration: 1});
-introTimeline.to(splitHeroEnglish.chars, {x: ((window.innerWidth)/2)-(document.getElementById('heroEnglish').offsetWidth/2), yPercent: 125, stagger: -0.05, duration: 1}, "<");
-introTimeline.to(".content-square", {height: (window.innerHeight*0.75), width: (window.innerWidth*0.75), opacity: 1, duration: 1.3, ease: "power2.inOut"}, "<");
+const wrapper = document.querySelector(".content-wrapper");
+const colors = ["#FFFFFF","#000000"];
+const contentItems = gsap.utils.toArray(".content-item");
+console.clear();
+/* Logic to interpolate text color of items, uses colors contant above
+gsap.set(boxes , {
+  color: gsap.utils.wrap(colors)
+});
 */
 
-const wrapper = document.querySelector(".wrapper");
-const colors = ["#0ae448","#9d95ff", "#abff84", "#00bae2"];
-const boxes = gsap.utils.toArray(".box");
-console.clear();
-gsap.set(boxes , {
-  backgroundColor: gsap.utils.wrap(colors)
-});
-
 let activeElement;
-const loop = horizontalLoop(boxes, {
+const contentLoop = horizontalLoop(contentItems, {
   paused: true, 
   draggable: true, // make it draggable
   center: true, // active element is the one in the center of the container rather than th left edge
@@ -32,13 +22,27 @@ const loop = horizontalLoop(boxes, {
   }
 });
 
-boxes.forEach((box, i) => box.addEventListener("click", () => loop.toIndex(i, {duration: 0.8, ease: "power1.inOut"})));
+//Opening/Hero Animation
+let introTimeline = gsap.timeline();
+var splitHeroRiley = new SplitText("#heroRiley");
+var splitHeroEnglish = new SplitText("#heroEnglish");
+introTimeline.fromTo("#heroRiley",{rotation: -100, transformOrigin: "20% 100%", opacity: 0},{rotation: 0, opacity: 1, duration: 0.8, ease: "power3"});
+introTimeline.fromTo("#heroEnglish",{rotation: -100, transformOrigin: "90% 0%", opacity: 0},{rotation: 0, opacity: 1, duration: 1, ease: "power3"});
+introTimeline.to(splitHeroRiley.chars, {x: ((-200-window.innerWidth)/2)+(document.getElementById('heroRiley').offsetWidth/2), yPercent: -125, stagger: -0.05, duration: 1});
+introTimeline.to(splitHeroEnglish.chars, {x: ((window.innerWidth)/2)-(document.getElementById('heroEnglish').offsetWidth/2), yPercent: 125, stagger: -0.05, duration: 1}, "<");
+introTimeline.to(".content-square", {height: (window.innerHeight*0.75), width: (window.innerWidth*0.75), opacity: 1, duration: 1.3, ease: "power2.inOut"}, "<");
+/* Animate content item scroll on load */
+introTimeline.fromTo(".content-wrapper", {opacity: 0, xPercent: -100}, {opacity: 1, xPercent: 0, duration: 1, ease: "power2.inOut"});
+introTimeline.add(contentLoop.toIndex(4, {duration:0.1}), "<");
+introTimeline.add(contentLoop.toIndex(3, {duration:0.2}), ">");
+introTimeline.add(contentLoop.toIndex(2, {duration:0.3}), ">");
+introTimeline.add(contentLoop.toIndex(1, {duration:0.8, ease: "power3.out"}), ">");
+
+contentItems.forEach((item, i) => item.addEventListener("click", () => contentLoop.toIndex(i, {duration: 0.8, ease: "power1.inOut"})));
 
 document.querySelector(".toggle").addEventListener("click", () => wrapper.classList.toggle("show-overflow"));
-document.querySelector(".next").addEventListener("click", () => loop.next({duration: 0.4, ease: "power1.inOut"}));
-document.querySelector(".prev").addEventListener("click", () => loop.previous({duration: 0.4, ease: "power1.inOut"}));
-
-
+document.querySelector(".next").addEventListener("click", () => contentLoop.next({duration: 0.4, ease: "power1.inOut"}));
+document.querySelector(".prev").addEventListener("click", () => contentLoop.previous({duration: 0.4, ease: "power1.inOut"}));
 
 
 /*
